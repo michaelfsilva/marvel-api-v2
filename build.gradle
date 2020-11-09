@@ -28,9 +28,17 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
-	testImplementation 'org.springframework.security:spring-security-test'
+//	testImplementation 'org.springframework.security:spring-security-test'
+	/*testImplementation*/ testCompile 'org.spockframework:spock-core:2.0-M4-groovy-3.0'
+//	testImplementation 'org.spockframework:spock-spring:2.0-M4-groovy-3.0',
+//	testImplementation 'com.athaydes:spock-reports:1.2.10'
+//	testImplementation 'com.athaydes:spock-reports:1.6.1', { transitive = false }
+//	testImplementation 'org.projectlombok:lombok:1.18.2'
+//	testCompile "org.testcontainers:spock:1.15.0"
 }
 
 test {
 	useJUnitPlatform()
 }
+
+apply from: rootProject.file('gradle/install-git-hooks.gradle')

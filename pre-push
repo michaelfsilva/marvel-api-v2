@@ -1,0 +1,9 @@
+#!/bin/bash
+
+echo "Running all tests"
+./gradlew test
+# If ./gradlew returned anything other than 0, the tests failed...
+if [[ $? != 0 ]] ; then
+  echo "Aborting commit due to failed tests."
+  exit 1
+fi
