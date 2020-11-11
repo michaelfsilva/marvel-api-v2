@@ -7,3 +7,7 @@ info:
 spring:
   profiles:
     active: local
+  security:
+    user:
+      name: test
+      password: marvel
