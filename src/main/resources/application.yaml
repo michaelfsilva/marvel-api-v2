@@ -1,0 +1,9 @@
+info:
+  app:
+    name: Marvel API V2
+    description: New version of Marvel API to provide Marvel Comics data
+    version: 2.0
+
+spring:
+  profiles:
+    active: local

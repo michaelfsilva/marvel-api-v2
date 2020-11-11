@@ -17,11 +17,11 @@ plugins {
 
 group = 'com.marvel.api'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '15'
+sourceCompatibility = '11'
 description = 'New version of Marvel API to provide Marvel Comics data'
 
-apply plugin: 'jacoco'
-apply plugin: 'org.sonarqube'
+//apply plugin: 'jacoco'
+//apply plugin: 'org.sonarqube'
 
 //sonarqube {
 //	properties {
