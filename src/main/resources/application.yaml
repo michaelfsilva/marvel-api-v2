@@ -11,3 +11,6 @@ spring:
     user:
       name: test
       password: marvel
+  data:
+    mongodb:
+      database: local
