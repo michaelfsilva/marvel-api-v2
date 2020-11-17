@@ -1,4 +1,15 @@
 package com.marvel.api.mapper;
 
-public class CharacterMapper {
+import com.marvel.api.entity.Character;
+import com.marvel.api.external.database.document.CharacterDocument;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+
+@Mapper
+public abstract class CharacterMapper {
+    public static final CharacterMapper INSTANCE = Mappers.getMapper(CharacterMapper.class);
+
+    public abstract Character toCharacter(final CharacterDocument characterDocument);
+
+    public abstract CharacterDocument toCharacterDocument(final Character character);
 }
