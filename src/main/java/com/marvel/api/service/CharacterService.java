@@ -1,20 +1,22 @@
 package com.marvel.api.service;
 
-import com.marvel.api.entity.Character;
-import com.marvel.api.entity.response.Response;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-
+@Service
+@Slf4j
+@RequiredArgsConstructor
 public class CharacterService {
-    public ResponseEntity<Response<List<Character>>> listAll() {
-        final List<Character> characters = characterService.listAll();
-
-        if (characters.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        return ResponseEntity.ok(new Response<List<Character>>(characters));
-    }
+//    CharacterGateway characterGateway;
+//
+//    public ResponseEntity<Response<List<Character>>> listAll() {
+//        final List<Character> characters = characterGateway.listAll();
+//
+//        if (characters.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//
+//        return ResponseEntity.ok(new Response<List<Character>>(characters));
+//    }
 }

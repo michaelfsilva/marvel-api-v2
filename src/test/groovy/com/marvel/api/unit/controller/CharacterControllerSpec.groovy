@@ -1,4 +1,4 @@
-package com.marvel.api.controller
+package com.marvel.api.unit.controller
 
 import spock.lang.Specification
 

@@ -32,6 +32,7 @@ public class CharacterController {
     @GetMapping
     public ResponseEntity<Response<List<Character>>> listAll() {
         log.debug("listing all characters");
-        return characterService.listAll();
+//        return characterService.listAll();
+        return null;
     }
 }
