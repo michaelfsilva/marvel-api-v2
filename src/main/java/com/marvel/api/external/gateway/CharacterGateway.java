@@ -13,9 +13,7 @@ public interface CharacterGateway {
 
     Character listByName(String name);
 
-    Character add(@Valid Character character);
-
-    Character update(@Valid Character character);
+    Character save(@Valid Character character);
 
     Character partialUpdate(String id, Map<String, Object> updates);
 

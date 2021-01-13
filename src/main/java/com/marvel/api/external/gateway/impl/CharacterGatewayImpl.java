@@ -17,38 +17,31 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class CharacterGatewayImpl implements CharacterGateway {
-//    @Autowired
+
     private final CharacterRepository characterRepository;
 
     @Override
     public List<Character> listAll() {
-        return CharacterMapper.INSTANCE.toCharacterList(characterRepository.findAll());
+        return CharacterMapper.toCharacterList(characterRepository.findAll());
     }
 
     @Override
     public Character listById(final String id) {
-        return CharacterMapper.INSTANCE.toCharacter(
+        return CharacterMapper.toCharacter(
                 characterRepository.findById(id).orElseThrow(IllegalArgumentException::new));
     }
 
     @Override
     public Character listByName(final String name) {
-        return CharacterMapper.INSTANCE.toCharacter(
+        return CharacterMapper.toCharacter(
                 characterRepository.findByNameIgnoreCaseContaining(name));
     }
 
     @Override
-    public Character add(@Valid final Character character) {
+    public Character save(@Valid final Character character) {
         final CharacterDocument savedDocument =
-                characterRepository.save(CharacterMapper.INSTANCE.toCharacterDocument(character));
-        return CharacterMapper.INSTANCE.toCharacter(savedDocument);
-    }
-
-    @Override
-    public Character update(@Valid final Character character) {
-        final CharacterDocument savedDocument =
-                characterRepository.save(CharacterMapper.INSTANCE.toCharacterDocument(character));
-        return CharacterMapper.INSTANCE.toCharacter(savedDocument);
+                characterRepository.save(CharacterMapper.toCharacterDocument(character));
+        return CharacterMapper.toCharacter(savedDocument);
     }
 
     @Override
@@ -74,8 +67,8 @@ public class CharacterGatewayImpl implements CharacterGateway {
         });
 
         final CharacterDocument savedDocument = characterRepository.save(
-                CharacterMapper.INSTANCE.toCharacterDocument(character));
-        return CharacterMapper.INSTANCE.toCharacter(savedDocument);
+                CharacterMapper.toCharacterDocument(character));
+        return CharacterMapper.toCharacter(savedDocument);
     }
 
     @Override

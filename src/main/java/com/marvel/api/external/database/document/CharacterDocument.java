@@ -12,8 +12,8 @@ import javax.validation.constraints.NotEmpty;
 @Document
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class CharacterDocument {
     @Id
     private String id;
