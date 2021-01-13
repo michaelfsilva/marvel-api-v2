@@ -13,6 +13,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
     id 'groovy'
+    id 'io.freefair.lombok' version '5.3.0'
 }
 
 group = 'com.marvel.api'
@@ -63,31 +64,28 @@ repositories {
 }
 
 ext {
-    set('mapstructVersion', "1.4.1.Final")
+    set("modelMapperVersion", "2.3.7")
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb',
             'org.springframework.boot:spring-boot-starter-security',
             'org.springframework.boot:spring-boot-starter-web',
-            'org.springframework.boot:spring-boot-starter-validation',
-            "org.mapstruct:mapstruct:${mapstructVersion}",
-            'org.projectlombok:lombok'
+            'org.springframework.boot:spring-boot-starter-validation'
+    compile 'io.springfox:springfox-swagger2:2.9.2',
+            'io.springfox:springfox-swagger-ui:2.9.2',
+            "org.modelmapper:modelmapper:${modelMapperVersion}"
+//			'net.logstash.logback:logstash-logback-encoder:6.4'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}",
-            'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test',
             'org.springframework.security:spring-security-test',
             'br.com.six2six:fixture-factory:3.1.0'
-//	        'org.projectlombok:lombok:1.18.2',
 //	testImplementation 'com.athaydes:spock-reports:1.6.1', { transitive = false }
     testCompile 'org.spockframework:spock-core:2.0-M3-groovy-2.5',
-            'org.spockframework:spock-spring:2.0-M3-groovy-2.5'
+            'org.spockframework:spock-spring:2.0-M3-groovy-2.5',
+            'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
 //	        'org.junit.jupiter:junit-jupiter-engine:5.2.0',
 //	        'org.testcontainers:spock:1.15.0'
-    compile 'io.springfox:springfox-swagger2:2.9.2',
-            'io.springfox:springfox-swagger-ui:2.9.2'/*,
-			'net.logstash.logback:logstash-logback-encoder:6.4'*/
 }
 
 test {

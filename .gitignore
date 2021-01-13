@@ -2,6 +2,7 @@ HELP.md
 !gradle-wrapper.jar
 .gradle
 build/
+lombok.config
 
 ### IntelliJ IDEA ###
 .idea
