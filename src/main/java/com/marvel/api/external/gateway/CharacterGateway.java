@@ -7,15 +7,17 @@ import java.util.List;
 import java.util.Map;
 
 public interface CharacterGateway {
-    List<Character> listAll();
+  List<Character> listAll();
 
-    Character listById(String id);
+  Character listById(String id);
 
-    Character listByName(String name);
+  Character listByName(String name);
 
-    Character save(@Valid Character character);
+  Character save(@Valid Character character);
 
-    Character partialUpdate(String id, Map<String, Object> updates);
+  Character update(String id, Character character);
 
-    void remove(String id);
+  Character partialUpdate(String id, Map<String, Object> updates);
+
+  void remove(String id);
 }
