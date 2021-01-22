@@ -2,7 +2,7 @@
 New version of Marvel API to provide Marvel Comics data
 
 ## Instructions to use
-Download the zip project by clicking on Clone or download button, then Downlod ZIP;  
+Download the zip project by clicking on Clone or download button, then Download ZIP;  
 Extract the zip file and open a terminal in the folder extracted;  
 Run the following command:  
 
@@ -28,7 +28,7 @@ GET http://localhost:8080/v1/characters/{id} [list a character by ID]
 GET http://localhost:8080/v1/characters/findByName/{name} [list a character by name ignoring case]  
 POST http://localhost:8080/v1/characters/ [add a new character]  
 PUT http://localhost:8080/v1/characters/{id} [update character all attributes]  
-PATCH http://localhost:8080/v1/characters/{id} [update one or more attrubutes of a character]  
+PATCH http://localhost:8080/v1/characters/{id} [update one or more attributes of a character]  
 DELETE http://localhost:8080/v1/characters/{id} [remove a character]  
 
 ## Commands

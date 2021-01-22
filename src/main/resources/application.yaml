@@ -13,4 +13,5 @@ spring:
       password: marvel
   data:
     mongodb:
+      uri: mongodb://localhost:27017/
       database: local
