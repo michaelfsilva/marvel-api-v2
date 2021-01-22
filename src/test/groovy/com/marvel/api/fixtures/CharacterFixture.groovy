@@ -9,6 +9,7 @@ import static com.marvel.api.entity.Character.Fields.*
 
 class CharacterFixture implements TemplateLoader {
     public static final String BASE_CHARACTER = "base character"
+    public static final String BASE_CHARACTER2 = "base character 2"
     public static final String EMPTY_CHARACTER = "empty character"
 
     @Override
@@ -18,6 +19,14 @@ class CharacterFixture implements TemplateLoader {
                 add(name, "Bucky")
                 add(description, "Capitain's old friend")
                 add(superPowers, "Strength, Steel arm")
+            }
+        })
+
+        Fixture.of(Character).addTemplate(BASE_CHARACTER2, new Rule() {
+            {
+                add(name, "Capitain America")
+                add(description, "The first avenger")
+                add(superPowers, "Strength, Strong shield")
             }
         })
 
