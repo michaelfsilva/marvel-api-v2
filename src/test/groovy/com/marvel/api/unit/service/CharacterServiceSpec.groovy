@@ -55,7 +55,7 @@ class CharacterServiceSpec extends Specification {
         def response = characterService.listById(id)
 
         then: "the gateway should be called"
-        1 * characterGateway.listById(any()) >> Optional.of(characterMock)
+        1 * characterGateway.listById(_) >> Optional.of(characterMock)
 
         and: "character should be returned"
         response.getBody().getData().name == characterMock.name
@@ -71,7 +71,7 @@ class CharacterServiceSpec extends Specification {
         def response = characterService.listById(id)
 
         then: "the gateway should be called"
-        1 * characterGateway.listById(any()) >> Optional.empty()
+        1 * characterGateway.listById(_) >> Optional.empty()
 
         and: "response should be not found"
         response.getStatusCode() == HttpStatus.NOT_FOUND
@@ -85,7 +85,7 @@ class CharacterServiceSpec extends Specification {
         characterService.listByName(characterMock.name)
 
         then: "the gateway should be called"
-        1 * characterGateway.listByName(any()) >> characterMock
+        1 * characterGateway.listByName(_) >> characterMock
     }
 
     def "Should save a character"() {
@@ -96,7 +96,7 @@ class CharacterServiceSpec extends Specification {
         characterService.save(characterMock)
 
         then: "the gateway should be called"
-        1 * characterGateway.save(any())
+        1 * characterGateway.save(_)
     }
 
     def "Should update character"() {
@@ -108,7 +108,7 @@ class CharacterServiceSpec extends Specification {
         characterService.update(id, characterMock as Character)
 
         then: "the gateway should be called"
-        1 * characterGateway.update(any(), any())
+        1 * characterGateway.update(_, _)
     }
 
     def "Should partial update character"() {
@@ -120,7 +120,7 @@ class CharacterServiceSpec extends Specification {
         characterService.partialUpdate(id, updates)
 
         then: "the gateway should be called"
-        1 * characterGateway.partialUpdate(any(), any())
+        1 * characterGateway.partialUpdate(_, _)
     }
 
     def "Should remove character"() {
@@ -131,6 +131,6 @@ class CharacterServiceSpec extends Specification {
         characterService.remove(id)
 
         then: "the gateway should be called"
-        1 * characterGateway.remove(any())
+        1 * characterGateway.remove(_)
     }
 }
