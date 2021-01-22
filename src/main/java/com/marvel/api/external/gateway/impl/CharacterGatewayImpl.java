@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -26,14 +27,16 @@ public class CharacterGatewayImpl implements CharacterGateway {
   }
 
   @Override
-  public Character listById(final String id) {
-    return CharacterMapper.toCharacter(
-        characterRepository.findById(id).orElseThrow(IllegalArgumentException::new));
+  public Optional<Character> listById(final String id) {
+    return Optional.of(
+        CharacterMapper.toCharacter(
+            characterRepository.findById(id).orElseThrow(IllegalArgumentException::new)));
   }
 
   @Override
-  public Character listByName(final String name) {
-    return CharacterMapper.toCharacter(characterRepository.findByNameIgnoreCaseContaining(name));
+  public Optional<Character> listByName(final String name) {
+    return Optional.of(
+        CharacterMapper.toCharacter(characterRepository.findByNameIgnoreCaseContaining(name)));
   }
 
   @Override
@@ -53,7 +56,7 @@ public class CharacterGatewayImpl implements CharacterGateway {
 
   @Override
   public Character partialUpdate(final String id, final Map<String, Object> updates) {
-    final var character = listById(id);
+    final var character = listById(id).orElseThrow();
 
     updates.forEach(
         (key, value) -> {
