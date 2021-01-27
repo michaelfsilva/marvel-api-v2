@@ -4,7 +4,6 @@ import br.com.six2six.fixturefactory.Fixture
 import com.marvel.api.entity.Character
 import com.marvel.api.external.gateway.CharacterGateway
 import com.marvel.api.fixtures.CharacterFixture
-import com.marvel.api.mapper.CharacterMapper
 import com.marvel.api.service.CharacterService
 import org.springframework.http.HttpStatus
 import spock.lang.Specification
@@ -79,18 +78,18 @@ class CharacterServiceSpec extends Specification {
 
     def "Should list character by name"() {
         given: "character mock"
-        def characterMock = CharacterMapper.toCharacterDocument(Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER))
+        Character characterMock = Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER)
 
         when: "call the service"
         characterService.listByName(characterMock.name)
 
         then: "the gateway should be called"
-        1 * characterGateway.listByName(_) >> characterMock
+        1 * characterGateway.listByName(_) >> Optional.of(characterMock)
     }
 
     def "Should save a character"() {
         given: "character mock"
-        def characterMock = Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER)
+        Character characterMock = Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER)
 
         when: "call the service"
         characterService.save(characterMock)
@@ -108,29 +107,34 @@ class CharacterServiceSpec extends Specification {
         characterService.update(id, characterMock as Character)
 
         then: "the gateway should be called"
+        1 * characterGateway.listById(_) >> Optional.of(characterMock)
         1 * characterGateway.update(_, _)
     }
 
     def "Should partial update character"() {
-        given: "character id and updates"
+        given: "character id, updates and mock"
         def id = "1"
         def updates = new HashMap<String, String>()
+        def characterMock = Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER)
 
         when: "call the service"
         characterService.partialUpdate(id, updates)
 
         then: "the gateway should be called"
+        1 * characterGateway.listById(_) >> Optional.of(characterMock)
         1 * characterGateway.partialUpdate(_, _)
     }
 
     def "Should remove character"() {
-        given: "character id"
+        given: "character id and mock"
         def id = "1"
+        def characterMock = Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER)
 
         when: "call the service"
         characterService.remove(id)
 
         then: "the gateway should be called"
+        1 * characterGateway.listById(_) >> Optional.of(characterMock)
         1 * characterGateway.remove(_)
     }
 }
