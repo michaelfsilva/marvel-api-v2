@@ -46,7 +46,7 @@ public class CharacterController {
   }
 
   @GetMapping("/findByName/{name}")
-  public ResponseEntity<Response<Character>> getByName(@PathVariable final String name) {
+  public ResponseEntity<Response<List<Character>>> getByName(@PathVariable final String name) {
     log.debug("listing character by name");
     return characterService.listByName(name);
   }

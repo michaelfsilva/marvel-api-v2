@@ -34,9 +34,9 @@ public class CharacterGatewayImpl implements CharacterGateway {
   }
 
   @Override
-  public Optional<Character> listByName(final String name) {
-    return Optional.of(
-        CharacterMapper.toCharacter(characterRepository.findByNameIgnoreCaseContaining(name)));
+  public List<Character> listByName(final String name) {
+    return CharacterMapper.toCharacterList(
+        characterRepository.findByNameIgnoreCaseContaining(name));
   }
 
   @Override

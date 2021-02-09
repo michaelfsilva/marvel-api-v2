@@ -44,16 +44,16 @@ class CharacterGatewayImplTest extends Specification {
         characterGateway.save(character)
 
         then: "All fields should be persisted on DB"
-        CharacterDocument characterSaved = characterRepository.findByNameIgnoreCaseContaining(character.getName())
-        characterSaved.name == character.name
-        characterSaved.description == character.description
-        characterSaved.superPowers == character.superPowers
+        List<CharacterDocument> characterSaved = characterRepository.findByNameIgnoreCaseContaining(character.getName())
+        characterSaved.get(0).name == character.name
+        characterSaved.get(0).description == character.description
+        characterSaved.get(0).superPowers == character.superPowers
 
         where: "Character is"
         name       | description                 | superPowers
-        "Hulk"     | "The green gemn"            | "Strength, Resistance, Gama radiation"
+        "Hulk"     | "The green gem"            | "Strength, Resistance, Gama radiation"
         "Iron Man" | "A smart man with an armor" | "Flying, shot, laser, resistance"
-        "Thor"     | "The god of thunder"        | "Strength, Resistance, Thunder, Stormbraker"
+        "Thor"     | "The god of thunder"        | "Strength, Resistance, Thunder, Stormbreaker"
     }
 
     def "Should list all character on DB"() {

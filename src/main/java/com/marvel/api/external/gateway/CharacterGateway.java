@@ -12,7 +12,7 @@ public interface CharacterGateway {
 
   Optional<Character> listById(String id);
 
-  Optional<Character> listByName(String name);
+  List<Character> listByName(String name);
 
   Character save(@Valid Character character);
 

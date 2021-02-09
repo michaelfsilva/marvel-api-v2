@@ -84,7 +84,7 @@ class CharacterServiceSpec extends Specification {
         characterService.listByName(characterMock.name)
 
         then: "the gateway should be called"
-        1 * characterGateway.listByName(_) >> Optional.of(characterMock)
+        1 * characterGateway.listByName(_) >> Collections.singletonList(characterMock)
     }
 
     def "Should save a character"() {

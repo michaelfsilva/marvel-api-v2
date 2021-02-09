@@ -36,12 +36,14 @@ public class CharacterService {
         .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
 
-  public ResponseEntity<Response<Character>> listByName(final String name) {
-    final var character = characterGateway.listByName(name);
+  public ResponseEntity<Response<List<Character>>> listByName(final String name) {
+    final var characters = characterGateway.listByName(name);
 
-    return character
-        .map(value -> ResponseEntity.ok(new Response<>(value)))
-        .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    if (characters.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    return ResponseEntity.ok(new Response<>(characters));
   }
 
   public ResponseEntity<Response<Character>> save(final Character character) {
