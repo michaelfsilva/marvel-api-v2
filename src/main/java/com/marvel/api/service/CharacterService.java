@@ -33,7 +33,10 @@ public class CharacterService {
 
     return character
         .map(value -> ResponseEntity.ok(new Response<>(value)))
-        .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        .orElseGet(
+            () ->
+                new ResponseEntity<>(
+                    new Response<>("No character found for id: " + id), HttpStatus.NOT_FOUND));
   }
 
   public ResponseEntity<Response<List<Character>>> listByName(final String name) {
