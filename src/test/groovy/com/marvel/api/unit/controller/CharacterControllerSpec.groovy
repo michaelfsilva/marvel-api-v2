@@ -2,11 +2,14 @@ package com.marvel.api.unit.controller
 
 import br.com.six2six.fixturefactory.Fixture
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.marvel.api.config.SecurityConstants
 import com.marvel.api.controller.CharacterController
 import com.marvel.api.entity.Character
 import com.marvel.api.entity.response.Response
 import com.marvel.api.fixtures.CharacterFixture
 import com.marvel.api.service.CharacterService
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -23,8 +26,11 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 import static br.com.six2six.fixturefactory.loader.FixtureFactoryLoader.loadTemplates
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 
 @WebMvcTest(controllers = [CharacterController])
 class CharacterControllerSpec extends Specification {
@@ -34,20 +40,23 @@ class CharacterControllerSpec extends Specification {
     @SpringBean
     CharacterService characterService = Mock()
 
-    private String user = "test"
-    private String pass = "marvel"
+    private String token
     private static final String PAYLOAD_RESPONSE_PATH = "src/test/resources/payloads/response/"
 
     void setup() {
         loadTemplates("com.marvel.api.fixtures")
+        token = Jwts.builder()
+                .setSubject("test")
+                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET)
+                .compact()
     }
 
-    def "Should return 401 when credentials are incorrect"() {
+    def "Should return 403 when token is invalid"() {
         expect:
         mockMvc.perform(
-                get("/api/characters")
-                        .with(httpBasic("1", "1"))
-        ).andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                get("/api/characters").header("authorization", "Bearer fakeToken")
+        ).andExpect(MockMvcResultMatchers.status().isForbidden())
     }
 
     def "Should list all characters"() {
@@ -64,7 +73,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 get("/api/characters")
-                        .with(httpBasic(user, pass))
+                        .header("authorization", "Bearer " + token)
         ).andReturn()
 
         then: "should call the service"
@@ -84,7 +93,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 get("/api/characters")
-                        .with(httpBasic(user, pass))
+                        .header("authorization", "Bearer " + token)
         ).andReturn()
 
         then: "should return ok status"
@@ -111,7 +120,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 get(url, id)
-                        .with(httpBasic(user, pass))
+                        .header("authorization", "Bearer " + token)
         ).andReturn()
 
         then: "the return should have status #status"
@@ -138,7 +147,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 get("/api/characters/findByName/{name}", name)
-                        .with(httpBasic(user, pass))
+                        .header("authorization", "Bearer " + token)
         ).andReturn()
 
         then: "should call the service"
@@ -160,7 +169,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 post("/api/characters")
-                        .with(httpBasic(user, pass))
+                        .header("authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(character))
         ).andReturn()
@@ -197,7 +206,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 put("/api/characters/{id}", id)
-                        .with(httpBasic(user, pass))
+                        .header("authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(characterMock))
         ).andReturn()
@@ -224,7 +233,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 patch("/api/characters/{id}", id)
-                        .with(httpBasic(user, pass))
+                        .header("authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(updates))
         ).andReturn()
@@ -243,7 +252,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 delete("/api/characters/{id}", 1)
-                        .with(httpBasic(user, pass))
+                        .header("authorization", "Bearer " + token)
         ).andReturn()
 
         then: "should call the service"
