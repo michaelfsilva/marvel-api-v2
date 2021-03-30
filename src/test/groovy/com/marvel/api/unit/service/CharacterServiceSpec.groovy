@@ -5,7 +5,6 @@ import com.marvel.api.entity.Character
 import com.marvel.api.external.gateway.CharacterGateway
 import com.marvel.api.fixtures.CharacterFixture
 import com.marvel.api.service.CharacterService
-import org.springframework.http.HttpStatus
 import spock.lang.Specification
 
 import static br.com.six2six.fixturefactory.loader.FixtureFactoryLoader.loadTemplates
@@ -25,24 +24,24 @@ class CharacterServiceSpec extends Specification {
         charactersMock.add(Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER2))
 
         when: "call the service"
-        def response = characterService.listAll()
+        def characters = characterService.listAll()
 
         then: "the gateway should be called"
         1 * characterGateway.listAll() >> charactersMock
 
         and: "characters should be returned"
-        response.getBody().getData().size() == 2
+        characters.size() == 2
     }
 
     def "Should not return characters"() {
         when: "call the service"
-        def response = characterService.listAll()
+        def characters = characterService.listAll()
 
         then: "the gateway should be called"
-        1 * characterGateway.listAll() >> Arrays.asList()
+        1 * characterGateway.listAll() >> new ArrayList<>()
 
         and: "response should be no content"
-        response.getStatusCode() == HttpStatus.NO_CONTENT
+        characters.size() == 0
     }
 
     def "Should list character by id"() {
@@ -51,15 +50,15 @@ class CharacterServiceSpec extends Specification {
         Character characterMock = Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER)
 
         when: "call the service"
-        def response = characterService.listById(id)
+        def character = characterService.listById(id).get()
 
         then: "the gateway should be called"
         1 * characterGateway.listById(_) >> Optional.of(characterMock)
 
         and: "character should be returned"
-        response.getBody().getData().name == characterMock.name
-        response.getBody().getData().description == characterMock.description
-        response.getBody().getData().superPowers == characterMock.superPowers
+        character.name == characterMock.name
+        character.description == characterMock.description
+        character.superPowers == characterMock.superPowers
     }
 
     def "Should not return character by id"() {
@@ -67,13 +66,13 @@ class CharacterServiceSpec extends Specification {
         def id = "1"
 
         when: "call the service"
-        def response = characterService.listById(id)
+        def character = characterService.listById(id)
 
         then: "the gateway should be called"
         1 * characterGateway.listById(_) >> Optional.empty()
 
         and: "response should be not found"
-        response.getStatusCode() == HttpStatus.NOT_FOUND
+        !character.isPresent()
     }
 
     def "Should list character by name"() {
@@ -107,7 +106,6 @@ class CharacterServiceSpec extends Specification {
         characterService.update(id, characterMock as Character)
 
         then: "the gateway should be called"
-        1 * characterGateway.listById(_) >> Optional.of(characterMock)
         1 * characterGateway.update(_, _)
     }
 
@@ -115,26 +113,22 @@ class CharacterServiceSpec extends Specification {
         given: "character id, updates and mock"
         def id = "1"
         def updates = new HashMap<String, String>()
-        def characterMock = Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER)
 
         when: "call the service"
         characterService.partialUpdate(id, updates)
 
         then: "the gateway should be called"
-        1 * characterGateway.listById(_) >> Optional.of(characterMock)
         1 * characterGateway.partialUpdate(_, _)
     }
 
     def "Should remove character"() {
         given: "character id and mock"
         def id = "1"
-        def characterMock = Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER)
 
         when: "call the service"
         characterService.remove(id)
 
         then: "the gateway should be called"
-        1 * characterGateway.listById(_) >> Optional.of(characterMock)
         1 * characterGateway.remove(_)
     }
 }

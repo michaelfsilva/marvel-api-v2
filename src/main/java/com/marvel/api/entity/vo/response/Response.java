@@ -1,4 +1,4 @@
-package com.marvel.api.entity.response;
+package com.marvel.api.entity.vo.response;
 
 import lombok.Getter;
 

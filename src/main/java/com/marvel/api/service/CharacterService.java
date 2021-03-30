@@ -1,16 +1,14 @@
 package com.marvel.api.service;
 
 import com.marvel.api.entity.Character;
-import com.marvel.api.entity.response.Response;
 import com.marvel.api.external.gateway.CharacterGateway;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -18,66 +16,31 @@ import java.util.Map;
 public class CharacterService {
   private final CharacterGateway characterGateway;
 
-  public ResponseEntity<Response<List<Character>>> listAll() {
-    final var characters = characterGateway.listAll();
-
-    if (characters.isEmpty()) {
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    return ResponseEntity.ok(new Response<>(characters));
+  public List<Character> listAll() {
+    return characterGateway.listAll();
   }
 
-  public ResponseEntity<Response<Character>> listById(final String id) {
-    final var character = characterGateway.listById(id);
-
-    return character
-        .map(value -> ResponseEntity.ok(new Response<>(value)))
-        .orElseGet(
-            () ->
-                new ResponseEntity<>(
-                    new Response<>("No character found for id: " + id), HttpStatus.NOT_FOUND));
+  public Optional<Character> listById(final String id) {
+    return characterGateway.listById(id);
   }
 
-  public ResponseEntity<Response<List<Character>>> listByName(final String name) {
-    final var characters = characterGateway.listByName(name);
-
-    if (characters.isEmpty()) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    return ResponseEntity.ok(new Response<>(characters));
+  public List<Character> listByName(final String name) {
+    return characterGateway.listByName(name);
   }
 
-  public ResponseEntity<Response<Character>> save(final Character character) {
-    return new ResponseEntity<>(
-        new Response<>(characterGateway.save(character)), HttpStatus.CREATED);
+  public Character save(final Character character) {
+    return characterGateway.save(character);
   }
 
-  public ResponseEntity<Response<Character>> update(final String id, final Character character) {
-    if (characterGateway.listById(id).isEmpty()) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    return ResponseEntity.ok(new Response<>(characterGateway.update(id, character)));
+  public Character update(final String id, final Character character) {
+    return characterGateway.update(id, character);
   }
 
-  public ResponseEntity<Response<Character>> partialUpdate(
-      final String id, final Map<String, Object> updates) {
-    if (characterGateway.listById(id).isEmpty()) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    return ResponseEntity.ok(new Response<>(characterGateway.partialUpdate(id, updates)));
+  public Character partialUpdate(final String id, final Map<String, Object> updates) {
+    return characterGateway.partialUpdate(id, updates);
   }
 
-  public ResponseEntity<Response<Integer>> remove(final String id) {
-    if (characterGateway.listById(id).isEmpty()) {
-      return new ResponseEntity<>(
-          new Response<>("No character found for id: " + id), HttpStatus.NOT_FOUND);
-    }
-
+  public void remove(final String id) {
     characterGateway.remove(id);
-    return ResponseEntity.ok(new Response<>("Character deleted"));
   }
 }

@@ -1,21 +1,34 @@
 package com.marvel.api.controller;
 
 import com.marvel.api.entity.Character;
-import com.marvel.api.entity.response.Response;
+import com.marvel.api.entity.vo.request.CharacterRequest;
+import com.marvel.api.entity.vo.response.CharacterResponse;
+import com.marvel.api.entity.vo.response.Response;
+import com.marvel.api.mapper.CharacterMapper;
 import com.marvel.api.service.CharacterService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,39 +47,63 @@ public class CharacterController {
         @ApiResponse(code = 500, message = "Internal Server Error")
       })
   @GetMapping
-  public ResponseEntity<Response<List<Character>>> listAll() {
+  public ResponseEntity<Response<List<CharacterResponse>>> listAll() {
     log.debug("listing all characters");
-    return characterService.listAll();
+    final var characters = characterService.listAll();
+
+    if (characters.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    return ResponseEntity.ok(new Response<>(CharacterMapper.toCharacterResponseList(characters)));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Response<Character>> getById(@PathVariable final String id) {
+  public ResponseEntity<Response<CharacterResponse>> getById(@PathVariable final String id) {
     log.debug("listing character by id");
-    return characterService.listById(id);
+    final Optional<Character> character = characterService.listById(id);
+
+    return character
+        .map(value -> ResponseEntity.ok(new Response<>(CharacterMapper.toCharacterResponse(value))))
+        .orElseGet(
+            () ->
+                new ResponseEntity<>(
+                    new Response<>("No character found for id: " + id), HttpStatus.NOT_FOUND));
   }
 
   @GetMapping("/findByName/{name}")
-  public ResponseEntity<Response<List<Character>>> getByName(@PathVariable final String name) {
+  public ResponseEntity<Response<List<CharacterResponse>>> getByName(
+      @PathVariable final String name) {
     log.debug("listing character by name");
-    return characterService.listByName(name);
+    final var characters = characterService.listByName(name);
+
+    if (characters.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    return ResponseEntity.ok(new Response<>(CharacterMapper.toCharacterResponseList(characters)));
   }
 
   @PostMapping(consumes = "application/json")
-  public ResponseEntity<Response<Character>> add(
-      @Valid @RequestBody final Character character, final BindingResult result) {
+  public ResponseEntity<Response<CharacterResponse>> add(
+      @Valid @RequestBody final CharacterRequest characterRequest, final BindingResult result) {
     if (result.hasErrors()) {
       final List<String> errors = new ArrayList<>();
       result.getAllErrors().forEach(error -> errors.add(error.getDefaultMessage()));
       return ResponseEntity.badRequest().body(new Response<>(errors));
     }
 
-    return characterService.save(character);
+    return new ResponseEntity<>(
+        new Response<>(
+            CharacterMapper.toCharacterResponse(
+                characterService.save(CharacterMapper.fromCharacterRequest(characterRequest)))),
+        HttpStatus.CREATED);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Response<Character>> update(
+  public ResponseEntity<Response<CharacterResponse>> update(
       @PathVariable final String id,
-      @Valid @RequestBody final Character character,
+      @Valid @RequestBody final CharacterRequest characterRequest,
       final BindingResult result) {
     if (result.hasErrors()) {
       final List<String> errors = new ArrayList<>();
@@ -74,18 +111,38 @@ public class CharacterController {
       return ResponseEntity.badRequest().body(new Response<>(errors));
     }
 
-    return characterService.update(id, character);
+    if (characterService.listById(id).isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    return ResponseEntity.ok(
+        new Response<>(
+            CharacterMapper.toCharacterResponse(
+                characterService.update(
+                    id, CharacterMapper.fromCharacterRequest(characterRequest)))));
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<Response<Character>> patchUpdate(
+  public ResponseEntity<Response<CharacterResponse>> patchUpdate(
       @PathVariable final String id, @RequestBody final Map<String, Object> updates) {
-    return characterService.partialUpdate(id, updates);
+    if (characterService.listById(id).isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    return ResponseEntity.ok(
+        new Response<>(
+            CharacterMapper.toCharacterResponse(characterService.partialUpdate(id, updates))));
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Response<Integer>> remove(@PathVariable final String id) {
     log.debug("removing character with id: " + id);
-    return characterService.remove(id);
+    if (characterService.listById(id).isEmpty()) {
+      return new ResponseEntity<>(
+          new Response<>("No character found for id: " + id), HttpStatus.NOT_FOUND);
+    }
+
+    characterService.remove(id);
+    return ResponseEntity.ok(new Response<>("Character deleted"));
   }
 }

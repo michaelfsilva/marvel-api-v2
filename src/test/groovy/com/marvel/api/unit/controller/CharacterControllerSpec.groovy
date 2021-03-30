@@ -5,8 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.marvel.api.config.SecurityConstants
 import com.marvel.api.controller.CharacterController
 import com.marvel.api.entity.Character
-import com.marvel.api.entity.response.Response
+import com.marvel.api.entity.vo.request.CharacterRequest
 import com.marvel.api.fixtures.CharacterFixture
+import com.marvel.api.mapper.CharacterMapper
 import com.marvel.api.service.CharacterService
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
@@ -61,14 +61,13 @@ class CharacterControllerSpec extends Specification {
 
     def "Should list all characters"() {
         given: "service return mock"
-//        List<Character> characters = Arrays.asList(
-//                Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER),
-//                Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER2)
-//        )
-        Character characterMock = Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER)
+        List<Character> characters = Arrays.asList(
+                Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER),
+                Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER2)
+        )
 
         and: "expected response"
-        def response = new String(Files.readAllBytes(Paths.get(PAYLOAD_RESPONSE_PATH + "base_character.json")))
+        def response = new String(Files.readAllBytes(Paths.get(PAYLOAD_RESPONSE_PATH + "base_character_list.json")))
 
         when: "call the api"
         MvcResult result = mockMvc.perform(
@@ -77,7 +76,7 @@ class CharacterControllerSpec extends Specification {
         ).andReturn()
 
         then: "should call the service"
-        1 * characterService.listAll() >> ResponseEntity.ok(new Response<>(characterMock))
+        1 * characterService.listAll() >> characters
 
         and: "should return ok status"
         result.getResponse().getStatus() == HttpStatus.OK.value()
@@ -88,7 +87,7 @@ class CharacterControllerSpec extends Specification {
 
     def "Should not list all characters"() {
         given: "service return mock"
-        characterService.listAll() >> new ResponseEntity<>(HttpStatus.NO_CONTENT)
+        characterService.listAll() >> new ArrayList<>()
 
         when: "call the api"
         MvcResult result = mockMvc.perform(
@@ -106,10 +105,9 @@ class CharacterControllerSpec extends Specification {
         Character characterMock = Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER)
         characterService.listById(_ as String) >> {
             if (id == 1) {
-                return ResponseEntity.ok(new Response<>(characterMock))
+                return Optional.of(characterMock)
             } else {
-                new ResponseEntity<>(
-                        new Response<>("No character found for id: " + id), HttpStatus.NOT_FOUND)
+                return Optional.empty()
             }
         }
 
@@ -124,13 +122,13 @@ class CharacterControllerSpec extends Specification {
         ).andReturn()
 
         then: "the return should have status #status"
-        result.getResponse().getStatus() == statusExcpected.value()
+        result.getResponse().getStatus() == statusExpected.value()
 
         and: "response #expectedResponse"
         result.getResponse().getContentAsString() == response
 
         where:
-        scenario         | url                    | id || statusExcpected      | expectedResponse
+        scenario         | url                    | id || statusExpected       | expectedResponse
         "Bad url"        | "/v1/character{id}"    | 1  || HttpStatus.NOT_FOUND | ""
         "Nonexistent id" | "/api/characters/{id}" | 0  || HttpStatus.NOT_FOUND | "{\"data\":null,\"messages\":[\"No character found for id: 0\"]}"
         "Correct id"     | "/api/characters/{id}" | 1  || HttpStatus.OK        | "base_character.json"
@@ -139,10 +137,10 @@ class CharacterControllerSpec extends Specification {
     def "Should list character by name"() {
         given: "service return mock"
         def name = "Bucky"
-        def characterMock = Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER)
+        def characterMock = Collections.singletonList(Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER))
 
         and: "expected response"
-        def response = new String(Files.readAllBytes(Paths.get(PAYLOAD_RESPONSE_PATH + "base_character.json")))
+        def response = new String(Files.readAllBytes(Paths.get(PAYLOAD_RESPONSE_PATH + "base_character_single_list.json")))
 
         when: "call the api"
         MvcResult result = mockMvc.perform(
@@ -151,7 +149,7 @@ class CharacterControllerSpec extends Specification {
         ).andReturn()
 
         then: "should call the service"
-        1 * characterService.listByName(_) >> ResponseEntity.ok(new Response<>(characterMock))
+        1 * characterService.listByName(_) >> characterMock
 
         and: "should return ok status"
         result.getResponse().getStatus() == HttpStatus.OK.value()
@@ -177,8 +175,7 @@ class CharacterControllerSpec extends Specification {
         then: "should call the service"
         callsToService * characterService.save(_) >> {
             if (callsToService != 0) {
-                new ResponseEntity<>(
-                        new Response<>(character), HttpStatus.CREATED)
+                CharacterMapper.fromCharacterRequest(character)
             }
         }
 
@@ -189,16 +186,20 @@ class CharacterControllerSpec extends Specification {
         result.getResponse().getContentAsString() == response
 
         where:
-        scenario                   | character                                | callsToService | expectedStatus         | expectedResponse
-        "character name is null"   | Character.builder().build()              | 0              | HttpStatus.BAD_REQUEST | "empty_name.json"
-        "character name is empty"  | Character.builder().name("").build()     | 0              | HttpStatus.BAD_REQUEST | "empty_name.json"
-        "character name is filled" | Character.builder().name("Test").build() | 1              | HttpStatus.CREATED     | "{\"data\":{\"name\":\"Test\",\"description\":null,\"superPowers\":null},\"messages\":null}"
+        scenario                   | character                                       | callsToService | expectedStatus         | expectedResponse
+        "Character name is null"   | CharacterRequest.builder().build()              | 0              | HttpStatus.BAD_REQUEST | "empty_name.json"
+        "Character name is empty"  | CharacterRequest.builder().name("").build()     | 0              | HttpStatus.BAD_REQUEST | "empty_name.json"
+        "Character name is filled" | CharacterRequest.builder().name("Test").build() | 1              | HttpStatus.CREATED     | "{\"data\":{\"name\":\"Test\",\"description\":null,\"superPowers\":null},\"messages\":null}"
     }
 
     def "Should update a character"() {
         given: "service return mock"
         def id = "1"
-        Character characterMock = Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER)
+        CharacterRequest characterMock = CharacterRequest.builder()
+                .name("Bucky")
+                .description("Capitain's old friend")
+                .superPowers("Strength, Steel arm")
+                .build()
 
         and: "expected response"
         def response = new String(Files.readAllBytes(Paths.get(PAYLOAD_RESPONSE_PATH + "base_character.json")))
@@ -212,7 +213,8 @@ class CharacterControllerSpec extends Specification {
         ).andReturn()
 
         then: "should call the service"
-        1 * characterService.update(_ as String, _ as Character) >> ResponseEntity.ok(new Response<>(characterMock))
+        1 * characterService.listById(_ as String) >> Optional.of(CharacterMapper.fromCharacterRequest(characterMock))
+        1 * characterService.update(_ as String, _ as Character) >> CharacterMapper.fromCharacterRequest(characterMock)
 
         and: "should return ok status"
         result.getResponse().getStatus() == HttpStatus.OK.value()
@@ -239,7 +241,8 @@ class CharacterControllerSpec extends Specification {
         ).andReturn()
 
         then: "should call the service"
-        1 * characterService.partialUpdate(_ as String, _ as Map<String, Object>) >> ResponseEntity.ok(new Response<>(characterMock))
+        1 * characterService.listById(_ as String) >> Optional.of(characterMock)
+        1 * characterService.partialUpdate(_ as String, _ as Map<String, Object>) >> characterMock
 
         and: "should return ok status"
         result.getResponse().getStatus() == HttpStatus.OK.value()
@@ -248,20 +251,36 @@ class CharacterControllerSpec extends Specification {
         result.getResponse().getContentAsString() == response
     }
 
-    def "Should delete a character"() {
+    @Unroll
+    def "Should delete a character #scenario"() {
+        given: "service return mock"
+        def characterMock = Fixture.from(Character).gimme(CharacterFixture.BASE_CHARACTER)
+
         when: "call the api"
         MvcResult result = mockMvc.perform(
-                delete("/api/characters/{id}", 1)
+                delete("/api/characters/{id}", id)
                         .header("authorization", "Bearer " + token)
         ).andReturn()
 
         then: "should call the service"
-        1 * characterService.remove(_ as String) >> ResponseEntity.ok(new Response<>("Character deleted"))
+        1 * characterService.listById(_ as String) >> {
+            if (id == 0) {
+                Optional.empty()
+            } else {
+                Optional.of(characterMock)
+            }
+        }
+        callsToRemove * characterService.remove(_ as String)
 
-        and: "should return ok status"
-        result.getResponse().getStatus() == HttpStatus.OK.value()
+        and: "should return status"
+        result.getResponse().getStatus() == statusExpected.value()
 
         and: "response body"
-        result.getResponse().getContentAsString() == "{\"data\":null,\"messages\":[\"Character deleted\"]}"
+        result.getResponse().getContentAsString() == expectedResponse
+
+        where:
+        scenario                   | id || callsToRemove | statusExpected       | expectedResponse
+        "Nonexistent character id" | 0  || 0             | HttpStatus.NOT_FOUND | "{\"data\":null,\"messages\":[\"No character found for id: 0\"]}"
+        "Correct character id"     | 1  || 1             | HttpStatus.OK        | "{\"data\":null,\"messages\":[\"Character deleted\"]}"
     }
 }

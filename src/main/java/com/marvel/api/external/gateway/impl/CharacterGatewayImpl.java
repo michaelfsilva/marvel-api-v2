@@ -23,19 +23,19 @@ public class CharacterGatewayImpl implements CharacterGateway {
 
   @Override
   public List<Character> listAll() {
-    return CharacterMapper.toCharacterList(characterRepository.findAll());
+    return CharacterMapper.toCharacterDocumentList(characterRepository.findAll());
   }
 
   @Override
   public Optional<Character> listById(final String id) {
     return Optional.of(
-        CharacterMapper.toCharacter(
+        CharacterMapper.fromCharacterDocument(
             characterRepository.findById(id).orElseThrow(IllegalArgumentException::new)));
   }
 
   @Override
   public List<Character> listByName(final String name) {
-    return CharacterMapper.toCharacterList(
+    return CharacterMapper.toCharacterDocumentList(
         characterRepository.findByNameIgnoreCaseContaining(name));
   }
 
@@ -43,7 +43,7 @@ public class CharacterGatewayImpl implements CharacterGateway {
   public Character save(@Valid final Character character) {
     final CharacterDocument savedDocument =
         characterRepository.save(CharacterMapper.toCharacterDocument(character));
-    return CharacterMapper.toCharacter(savedDocument);
+    return CharacterMapper.fromCharacterDocument(savedDocument);
   }
 
   @Override
@@ -51,7 +51,7 @@ public class CharacterGatewayImpl implements CharacterGateway {
     final CharacterDocument characterDocument = CharacterMapper.toCharacterDocument(character);
     characterDocument.setId(id);
     final CharacterDocument savedDocument = characterRepository.save(characterDocument);
-    return CharacterMapper.toCharacter(savedDocument);
+    return CharacterMapper.fromCharacterDocument(savedDocument);
   }
 
   @Override
@@ -80,7 +80,7 @@ public class CharacterGatewayImpl implements CharacterGateway {
     final CharacterDocument characterDocument = CharacterMapper.toCharacterDocument(character);
     characterDocument.setId(id);
     final CharacterDocument savedDocument = characterRepository.save(characterDocument);
-    return CharacterMapper.toCharacter(savedDocument);
+    return CharacterMapper.fromCharacterDocument(savedDocument);
   }
 
   @Override
