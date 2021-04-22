@@ -55,7 +55,7 @@ class CharacterControllerSpec extends Specification {
     def "Should return 403 when token is invalid"() {
         expect:
         mockMvc.perform(
-                get("/api/characters").header("authorization", "Bearer fakeToken")
+                get("/api/characters").header("Authorization", "Bearer fakeToken")
         ).andExpect(MockMvcResultMatchers.status().isForbidden())
     }
 
@@ -72,7 +72,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 get("/api/characters")
-                        .header("authorization", "Bearer " + token)
+                        .header("Authorization", "Bearer " + token)
         ).andReturn()
 
         then: "should call the service"
@@ -92,7 +92,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 get("/api/characters")
-                        .header("authorization", "Bearer " + token)
+                        .header("Authorization", "Bearer " + token)
         ).andReturn()
 
         then: "should return ok status"
@@ -118,7 +118,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 get(url, id)
-                        .header("authorization", "Bearer " + token)
+                        .header("Authorization", "Bearer " + token)
         ).andReturn()
 
         then: "the return should have status #status"
@@ -145,7 +145,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 get("/api/characters/findByName/{name}", name)
-                        .header("authorization", "Bearer " + token)
+                        .header("Authorization", "Bearer " + token)
         ).andReturn()
 
         then: "should call the service"
@@ -167,7 +167,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 post("/api/characters")
-                        .header("authorization", "Bearer " + token)
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(character))
         ).andReturn()
@@ -197,7 +197,7 @@ class CharacterControllerSpec extends Specification {
         def id = "1"
         CharacterRequest characterMock = CharacterRequest.builder()
                 .name("Bucky")
-                .description("Capitain's old friend")
+                .description("The winter soldier")
                 .superPowers("Strength, Steel arm")
                 .build()
 
@@ -207,7 +207,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 put("/api/characters/{id}", id)
-                        .header("authorization", "Bearer " + token)
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(characterMock))
         ).andReturn()
@@ -235,7 +235,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 patch("/api/characters/{id}", id)
-                        .header("authorization", "Bearer " + token)
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(updates))
         ).andReturn()
@@ -259,7 +259,7 @@ class CharacterControllerSpec extends Specification {
         when: "call the api"
         MvcResult result = mockMvc.perform(
                 delete("/api/characters/{id}", id)
-                        .header("authorization", "Bearer " + token)
+                        .header("Authorization", "Bearer " + token)
         ).andReturn()
 
         then: "should call the service"

@@ -15,7 +15,7 @@ import spock.lang.Unroll
 import static br.com.six2six.fixturefactory.loader.FixtureFactoryLoader.loadTemplates
 
 @SpringBootTest
-class CharacterGatewayImplTest extends Specification {
+class CharacterGatewayImplSpec extends Specification {
     @Autowired
     CharacterGateway characterGateway
     @Autowired
@@ -51,7 +51,7 @@ class CharacterGatewayImplTest extends Specification {
 
         where: "Character is"
         name       | description                 | superPowers
-        "Hulk"     | "The green gem"            | "Strength, Resistance, Gama radiation"
+        "Hulk"     | "The green gem"             | "Strength, Resistance, Gama radiation"
         "Iron Man" | "A smart man with an armor" | "Flying, shot, laser, resistance"
         "Thor"     | "The god of thunder"        | "Strength, Resistance, Thunder, Stormbreaker"
     }

@@ -5,7 +5,9 @@ import br.com.six2six.fixturefactory.Rule
 import br.com.six2six.fixturefactory.loader.TemplateLoader
 import com.marvel.api.entity.Character
 
-import static com.marvel.api.entity.Character.Fields.*
+import static com.marvel.api.entity.Character.Fields.description
+import static com.marvel.api.entity.Character.Fields.name
+import static com.marvel.api.entity.Character.Fields.superPowers
 
 class CharacterFixture implements TemplateLoader {
     public static final String BASE_CHARACTER = "base character"
@@ -17,7 +19,7 @@ class CharacterFixture implements TemplateLoader {
         Fixture.of(Character).addTemplate(BASE_CHARACTER, new Rule() {
             {
                 add(name, "Bucky")
-                add(description, "Capitain's old friend")
+                add(description, "The winter soldier")
                 add(superPowers, "Strength, Steel arm")
             }
         })

@@ -33,7 +33,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/characters")
+@RequestMapping({"/api", "/api/characters"})
 public class CharacterController {
 
   private final CharacterService characterService;
