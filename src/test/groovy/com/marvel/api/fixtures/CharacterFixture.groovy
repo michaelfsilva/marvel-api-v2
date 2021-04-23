@@ -26,7 +26,7 @@ class CharacterFixture implements TemplateLoader {
 
         Fixture.of(Character).addTemplate(BASE_CHARACTER2, new Rule() {
             {
-                add(name, "Capitain America")
+                add(name, "Captain America")
                 add(description, "The first avenger")
                 add(superPowers, "Strength, Strong shield")
             }

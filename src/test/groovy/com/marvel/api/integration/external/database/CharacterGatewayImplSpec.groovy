@@ -14,7 +14,9 @@ import spock.lang.Unroll
 
 import static br.com.six2six.fixturefactory.loader.FixtureFactoryLoader.loadTemplates
 
-@SpringBootTest
+//Running all tests using exactly the same @SprintBootTest annotation will start the application just once
+//@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CharacterGatewayImplSpec extends Specification {
     @Autowired
     CharacterGateway characterGateway
