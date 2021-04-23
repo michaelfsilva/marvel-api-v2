@@ -28,9 +28,7 @@ public class CharacterGatewayImpl implements CharacterGateway {
 
   @Override
   public Optional<Character> listById(final String id) {
-    return Optional.of(
-        CharacterMapper.fromCharacterDocument(
-            characterRepository.findById(id).orElseThrow(IllegalArgumentException::new)));
+    return characterRepository.findById(id).map(CharacterMapper::fromCharacterDocument);
   }
 
   @Override
@@ -48,7 +46,7 @@ public class CharacterGatewayImpl implements CharacterGateway {
 
   @Override
   public Character update(final String id, final Character character) {
-    final CharacterDocument characterDocument = CharacterMapper.toCharacterDocument(character);
+    final var characterDocument = CharacterMapper.toCharacterDocument(character);
     characterDocument.setId(id);
     final CharacterDocument savedDocument = characterRepository.save(characterDocument);
     return CharacterMapper.fromCharacterDocument(savedDocument);
@@ -77,7 +75,7 @@ public class CharacterGatewayImpl implements CharacterGateway {
           }
         });
 
-    final CharacterDocument characterDocument = CharacterMapper.toCharacterDocument(character);
+    final var characterDocument = CharacterMapper.toCharacterDocument(character);
     characterDocument.setId(id);
     final CharacterDocument savedDocument = characterRepository.save(characterDocument);
     return CharacterMapper.fromCharacterDocument(savedDocument);
