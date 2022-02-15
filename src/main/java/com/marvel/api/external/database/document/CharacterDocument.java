@@ -9,18 +9,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotEmpty;
 
-@Document
+@Document(collection = "Character")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CharacterDocument {
-    @Id
-    private String id;
+  @Id private String id;
 
-    @NotEmpty(message = "Name attribute is mandatory")
-    private String name;
-    private String description;
-    private String superPowers;
+  @NotEmpty(message = "Name attribute is mandatory")
+  private String name;
 
+  private String description;
+  private String superPowers;
 }
