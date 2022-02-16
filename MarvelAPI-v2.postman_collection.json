@@ -40,16 +40,11 @@
 			},
 			"request": {
 				"auth": {
-					"type": "basic",
-					"basic": [
+					"type": "bearer",
+					"bearer": [
 						{
-							"key": "username",
-							"value": "test",
-							"type": "string"
-						},
-						{
-							"key": "password",
-							"value": "marvel",
+							"key": "token",
+							"value": "Bearer eyTest123",
 							"type": "string"
 						}
 					]
@@ -80,25 +75,10 @@
 		{
 			"name": "getById",
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "marvel",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "test",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/characters/2",
+					"raw": "http://localhost:8080/api/characters/620d3e2b7bfc7c7ebd5ce998",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -107,7 +87,7 @@
 					"path": [
 						"api",
 						"characters",
-						"2"
+						"620d3e2b7bfc7c7ebd5ce998"
 					]
 				},
 				"description": "Get character data by its id"
@@ -117,25 +97,10 @@
 		{
 			"name": "findByName",
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "marvel",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "test",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/characters/findByName/hulk",
+					"raw": "http://localhost:8080/api/characters/findByName/thor",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -145,7 +110,7 @@
 						"api",
 						"characters",
 						"findByName",
-						"hulk"
+						"thor"
 					]
 				},
 				"description": "Get character data by its name ignoring case"
@@ -155,21 +120,6 @@
 		{
 			"name": "addCharacter",
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "marvel",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "test",
-							"type": "string"
-						}
-					]
-				},
 				"method": "POST",
 				"header": [
 					{
@@ -208,21 +158,6 @@
 		{
 			"name": "updateCharacter",
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "marvel",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "test",
-							"type": "string"
-						}
-					]
-				},
 				"method": "PUT",
 				"header": [
 					{
@@ -242,7 +177,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/characters/3",
+					"raw": "http://localhost:8080/api/characters/620c4c9442ba0b350522b31d",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -251,7 +186,7 @@
 					"path": [
 						"api",
 						"characters",
-						"3"
+						"620c4c9442ba0b350522b31d"
 					]
 				},
 				"description": "Update all attributes of a character"
@@ -261,21 +196,6 @@
 		{
 			"name": "partialUpdateCharacter",
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "marvel",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "test",
-							"type": "string"
-						}
-					]
-				},
 				"method": "PATCH",
 				"header": [
 					{
@@ -295,7 +215,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/characters/3",
+					"raw": "http://localhost:8080/api/characters/620c4c9442ba0b350522b31d",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -304,7 +224,7 @@
 					"path": [
 						"api",
 						"characters",
-						"3"
+						"620c4c9442ba0b350522b31d"
 					]
 				},
 				"description": "Update one or more attributes from a character"
@@ -314,25 +234,10 @@
 		{
 			"name": "removeCharacter",
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "marvel",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "test",
-							"type": "string"
-						}
-					]
-				},
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/characters/2",
+					"raw": "http://localhost:8080/api/characters/620c4c9442ba0b350522b31d",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -341,7 +246,7 @@
 					"path": [
 						"api",
 						"characters",
-						"2"
+						"620c4c9442ba0b350522b31d"
 					]
 				},
 				"description": "Delete a character by its id"

@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CharacterResponse {
+  private String id;
   private String name;
   private String description;
   private String superPowers;

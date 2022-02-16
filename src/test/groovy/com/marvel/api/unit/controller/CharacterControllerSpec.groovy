@@ -26,11 +26,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 import static br.com.six2six.fixturefactory.loader.FixtureFactoryLoader.loadTemplates
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 
 @WebMvcTest(controllers = [CharacterController])
 class CharacterControllerSpec extends Specification {
@@ -189,13 +185,14 @@ class CharacterControllerSpec extends Specification {
         scenario                   | character                                       | callsToService | expectedStatus         | expectedResponse
         "Character name is null"   | CharacterRequest.builder().build()              | 0              | HttpStatus.BAD_REQUEST | "empty_name.json"
         "Character name is empty"  | CharacterRequest.builder().name("").build()     | 0              | HttpStatus.BAD_REQUEST | "empty_name.json"
-        "Character name is filled" | CharacterRequest.builder().name("Test").build() | 1              | HttpStatus.CREATED     | "{\"data\":{\"name\":\"Test\",\"description\":null,\"superPowers\":null},\"messages\":null}"
+        "Character name is filled" | CharacterRequest.builder().name("Test").build() | 1              | HttpStatus.CREATED     | "{\"data\":{\"id\":null,\"name\":\"Test\",\"description\":null,\"superPowers\":null},\"messages\":null}"
     }
 
     def "Should update a character"() {
         given: "service return mock"
         def id = "1"
-        CharacterRequest characterMock = CharacterRequest.builder()
+        Character characterMock = Character.builder()
+                .id("620d3e2b7bfc7c7ebd5ce998")
                 .name("Bucky")
                 .description("The winter soldier")
                 .superPowers("Strength, Steel arm")
@@ -213,8 +210,8 @@ class CharacterControllerSpec extends Specification {
         ).andReturn()
 
         then: "should call the service"
-        1 * characterService.listById(_ as String) >> Optional.of(CharacterMapper.fromCharacterRequest(characterMock))
-        1 * characterService.update(_ as String, _ as Character) >> CharacterMapper.fromCharacterRequest(characterMock)
+        1 * characterService.listById(_ as String) >> Optional.of(characterMock)
+        1 * characterService.update(_ as String, _ as Character) >> characterMock
 
         and: "should return ok status"
         result.getResponse().getStatus() == HttpStatus.OK.value()
