@@ -7,8 +7,12 @@ import com.marvel.api.external.database.repository.CharacterRepository
 import com.marvel.api.external.gateway.CharacterGateway
 import com.marvel.api.fixtures.CharacterFixture
 import com.marvel.api.mapper.CharacterMapper
+import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.test.context.junit4.SpringRunner
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -17,11 +21,15 @@ import static br.com.six2six.fixturefactory.loader.FixtureFactoryLoader.loadTemp
 //Running all tests using exactly the same @SprintBootTest annotation will start the application just once
 //@SpringBootTest
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureDataMongo
+@RunWith(SpringRunner.class)
 class CharacterGatewayImplSpec extends Specification {
     @Autowired
-    CharacterGateway characterGateway
+    MongoTemplate mongoTemplate;
     @Autowired
     CharacterRepository characterRepository
+    @Autowired
+    CharacterGateway characterGateway
 
     CharacterDocument baseCharacter
 

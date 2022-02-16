@@ -13,7 +13,9 @@ spring:
       password: marvel
   data:
     mongodb:
-      #      uri: mongodb://localhost:27017/
-      username: root
-      password: marvel
+      uri: mongodb://root:marvel@localhost:27017/
+      # if the port is the default 27017 is not necessary to add the uri property,
+      # but the properties username and password conflicts to embedded mongodb
+      #      username: root
+      #      password: marvel
       database: local

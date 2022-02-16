@@ -12,10 +12,13 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.restassured.RestAssured
 import io.restassured.http.Header
+import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
+import org.springframework.test.context.junit4.SpringRunner
 import spock.lang.Specification
 
 import static br.com.six2six.fixturefactory.loader.FixtureFactoryLoader.loadTemplates
@@ -25,6 +28,8 @@ import static io.restassured.http.ContentType.JSON
 import static org.hamcrest.CoreMatchers.equalTo
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureDataMongo
+@RunWith(SpringRunner.class)
 class CharacterComponentSpec extends Specification {
     @Autowired
     CharacterRepository characterRepository
