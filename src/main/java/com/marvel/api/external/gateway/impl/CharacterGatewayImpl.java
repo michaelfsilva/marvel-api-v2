@@ -77,7 +77,7 @@ public class CharacterGatewayImpl implements CharacterGateway {
 
     final var characterDocument = CharacterMapper.toCharacterDocument(character);
     characterDocument.setId(id);
-    final CharacterDocument savedDocument = characterRepository.save(characterDocument);
+    final var savedDocument = characterRepository.save(characterDocument);
     return CharacterMapper.fromCharacterDocument(savedDocument);
   }
 

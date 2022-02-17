@@ -1,6 +1,5 @@
 package com.marvel.api.controller;
 
-import com.marvel.api.entity.Character;
 import com.marvel.api.entity.vo.request.CharacterRequest;
 import com.marvel.api.entity.vo.response.CharacterResponse;
 import com.marvel.api.entity.vo.response.Response;
@@ -28,7 +27,6 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -61,7 +59,7 @@ public class CharacterController {
   @GetMapping("/{id}")
   public ResponseEntity<Response<CharacterResponse>> getById(@PathVariable final String id) {
     log.debug("listing character by id");
-    final Optional<Character> character = characterService.listById(id);
+    final var character = characterService.listById(id);
 
     return character
         .map(value -> ResponseEntity.ok(new Response<>(CharacterMapper.toCharacterResponse(value))))
