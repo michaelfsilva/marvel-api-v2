@@ -46,7 +46,7 @@ public class CharacterController {
       })
   @GetMapping
   public ResponseEntity<Response<List<CharacterResponse>>> listAll() {
-    log.debug("listing all characters");
+    log.debug("Listing all characters");
     final var characters = characterService.listAll();
 
     if (characters.isEmpty()) {
@@ -58,7 +58,7 @@ public class CharacterController {
 
   @GetMapping("/{id}")
   public ResponseEntity<Response<CharacterResponse>> getById(@PathVariable final String id) {
-    log.debug("listing character by id");
+    log.debug("Listing character by id");
     final var character = characterService.listById(id);
 
     return character
@@ -72,7 +72,7 @@ public class CharacterController {
   @GetMapping("/findByName/{name}")
   public ResponseEntity<Response<List<CharacterResponse>>> getByName(
       @PathVariable final String name) {
-    log.debug("listing characters by name");
+    log.debug("Listing characters by name");
     final var characters = characterService.listByName(name);
 
     if (characters.isEmpty()) {
@@ -86,6 +86,8 @@ public class CharacterController {
   @PostMapping(consumes = "application/json")
   public ResponseEntity<Response<CharacterResponse>> add(
       @Valid @RequestBody final CharacterRequest characterRequest, final BindingResult result) {
+    log.debug("Adding a new character");
+
     if (result.hasErrors()) {
       final List<String> errors = new ArrayList<>();
       result.getAllErrors().forEach(error -> errors.add(error.getDefaultMessage()));
@@ -104,6 +106,8 @@ public class CharacterController {
       @PathVariable final String id,
       @Valid @RequestBody final CharacterRequest characterRequest,
       final BindingResult result) {
+    log.debug("Updating a character by id: " + id);
+
     if (result.hasErrors()) {
       final List<String> errors = new ArrayList<>();
       result.getAllErrors().forEach(error -> errors.add(error.getDefaultMessage()));
@@ -125,6 +129,8 @@ public class CharacterController {
   @PatchMapping("/{id}")
   public ResponseEntity<Response<CharacterResponse>> patchUpdate(
       @PathVariable final String id, @RequestBody final Map<String, Object> updates) {
+    log.debug("Partial updating a character by id: " + id);
+
     if (characterService.listById(id).isEmpty()) {
       return new ResponseEntity<>(
           new Response<>("No character found for id: " + id), HttpStatus.NOT_FOUND);
@@ -138,6 +144,7 @@ public class CharacterController {
   @DeleteMapping("/{id}")
   public ResponseEntity<Response<Integer>> remove(@PathVariable final String id) {
     log.debug("removing character with id: " + id);
+
     if (characterService.listById(id).isEmpty()) {
       return new ResponseEntity<>(
           new Response<>("No character found for id: " + id), HttpStatus.NOT_FOUND);

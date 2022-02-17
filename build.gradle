@@ -76,18 +76,14 @@ dependencies {
             "org.modelmapper:modelmapper:${modelMapperVersion}",
             'io.jsonwebtoken:jjwt:0.9.1',
             'javax.xml.bind:jaxb-api:2.1'
-//			'net.logstash.logback:logstash-logback-encoder:6.4'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test',
             'org.springframework.security:spring-security-test',
             'br.com.six2six:fixture-factory:3.1.0'
-//	testImplementation 'com.athaydes:spock-reports:1.6.1', { transitive = false }
     testCompile 'org.spockframework:spock-core:2.0-M3-groovy-2.5',
             'org.spockframework:spock-spring:2.0-M3-groovy-2.5',
             'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0',
             'io.rest-assured:rest-assured:3.0.0'
-//	        'org.junit.jupiter:junit-jupiter-engine:5.2.0',
-//	        'org.testcontainers:spock:1.15.0'
 }
 
 test {

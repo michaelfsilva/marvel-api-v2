@@ -20,7 +20,8 @@ If not:
 $ java -jar marvel-api-0.0.1-SNAPSHOT.jar
 ```
 
-Access http://localhost:8080/api/characters/ with user "test" and password "marvel" to see a list of characters.
+Request a Bearer token by sending a post request to http://localhost:8080/login with user "test" and password "marvel"
+Then access http://localhost:8080/api/characters/ with the generated Bearer token to see a list of characters.
 
 ## API Documentation
 
@@ -49,7 +50,7 @@ http://localhost:9000/projects
 
 ## Commands
 
-- Set Git Pre-Push Hook to execute unit and component tests before every git push
+- Set Git Pre-Push Hook to execute unit tests before every git push
 
   `./gradlew installGitHooks`
 
@@ -65,6 +66,6 @@ http://localhost:9000/projects
 
   `./gradlew bootRun`
 
-- Start project with local profile
+- Start project with "docker" profile
 
-  `./gradlew bootRun -Penv=local`
+  `./gradlew bootRun -Penv=docker`
