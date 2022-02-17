@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+  mongo:
+    container_name: mongodb
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: marvel
+  api:
+    container_name: marvel-api-v2
+    image: azul/zulu-openjdk-alpine:11-jre-headless
+    command: java -jar -Dspring.profiles.active=docker app/marvel-api-v2-0.0.1-SNAPSHOT.jar
+    volumes:
+      - "../../build/libs/:/app"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+#  sonar:
+#    image: sonarqube
+#    ports:
+#      - "9000:9000"
