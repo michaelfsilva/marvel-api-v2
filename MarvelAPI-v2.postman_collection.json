@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "60ba53fd-64e0-4fa6-b0be-bc619aa003f0",
+		"_postman_id": "2981c366-72de-4496-9756-2ada021c2bd9",
 		"name": "MarvelAPI-v2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -44,7 +44,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "Bearer eyTest123",
+							"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNjYzMzY5OTkyfQ.IyIHc39AO2PGUIqBfIMOc7ucehiHO87NW3UR4JoinRQjuGmN4dfUOmTz5vXyhPp_MXLial00srs6ArcdwhqCcg",
 							"type": "string"
 						}
 					]
@@ -78,7 +78,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/characters/620d3e2b7bfc7c7ebd5ce998",
+					"raw": "http://localhost:8080/api/characters/6324fba2161beb00ac3c95bc",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -87,7 +87,7 @@
 					"path": [
 						"api",
 						"characters",
-						"620d3e2b7bfc7c7ebd5ce998"
+						"6324fba2161beb00ac3c95bc"
 					]
 				},
 				"description": "Get character data by its id"
@@ -97,10 +97,20 @@
 		{
 			"name": "findByName",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNjYzMzY5ODU2fQ.itrlpsg2swglZBCNZ7PbW-mIaIb0RK-Zd_IhCtPO6gFmJKIIIdYQDCpahZTISQxKS992gLFqKEPJeDKSMCpKmw",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/characters/findByName/thor",
+					"raw": "http://localhost:8080/api/characters/findByName?name=thor",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -109,8 +119,13 @@
 					"path": [
 						"api",
 						"characters",
-						"findByName",
-						"thor"
+						"findByName"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "thor"
+						}
 					]
 				},
 				"description": "Get character data by its name ignoring case"
@@ -120,6 +135,16 @@
 		{
 			"name": "addCharacter",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNjYzMzY5OTkyfQ.IyIHc39AO2PGUIqBfIMOc7ucehiHO87NW3UR4JoinRQjuGmN4dfUOmTz5vXyhPp_MXLial00srs6ArcdwhqCcg",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [
 					{

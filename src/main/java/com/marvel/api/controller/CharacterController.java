@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -69,9 +70,9 @@ public class CharacterController {
                     new Response<>("No character found for id: " + id), HttpStatus.NOT_FOUND));
   }
 
-  @GetMapping("/findByName/{name}")
+  @GetMapping("/findByName")
   public ResponseEntity<Response<List<CharacterResponse>>> getByName(
-      @PathVariable final String name) {
+          @RequestParam final String name) {
     log.debug("Listing characters by name");
     final var characters = characterService.listByName(name);
 
